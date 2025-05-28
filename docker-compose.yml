@@ -1,0 +1,107 @@
+version: '3.9'
+
+services:
+#  zipkin:
+#    image: ghcr.io/openzipkin/zipkin-slim:latest
+#    restart: always
+#    container_name: zipkin
+#    environment:
+#      - STORAGE_TYPE=elasticsearch
+#      - ES_HOSTS=elasticsearch:9200
+#    ports:
+#      - "9411:9411"
+#    depends_on:
+#      - elasticsearch
+#    networks:
+#      buddy-network:
+#
+#  prometheus:
+#    image: prom/prometheus:latest
+#    restart: always
+#    container_name: prometheus
+#    volumes:
+#      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+#    ports:
+#      - "9090:9090"
+##    network_mode: host
+#    networks:
+#      buddy-network:
+#
+#  elasticsearch:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:8.16.2
+#    restart: always
+#    container_name: elasticsearch
+#    volumes:
+#      - ./es-data:/usr/share/elasticsearch/data
+#    environment:
+#      - cluster.name=jaeger-cluster
+#      - discovery.type=single-node
+#      - xpack.security.enabled=false
+#      - ES_JAVA_OPTS=-Xms512m -Xmx1024m
+#    #      - network.host=0.0.0.0
+#    #      - http.host=0.0.0.0
+#    ports:
+#      - "9200:9200"
+#      - "9300:9300"
+#    networks:
+#      buddy-network:
+#
+#  logstash:
+#    image: docker.elastic.co/logstash/logstash:8.5.1
+#    container_name: logstash
+#    volumes:
+#      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+#    environment:
+#      - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
+#    depends_on:
+#      - elasticsearch
+#    ports:
+#      - "5044:5044"
+#      - "9600:9600"
+#      - "5000:5000"
+#    networks:
+#      buddy-network:
+#
+#  kibana:
+#    image: docker.elastic.co/kibana/kibana:8.5.1
+#    container_name: kibana
+#    ports:
+#      - "5601:5601"
+#    depends_on:
+#      - elasticsearch
+#    networks:
+#      buddy-network:
+
+  mongodb:
+    image: mongo:8.0.4
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo_data:/data/db
+    networks:
+      buddy-network:
+
+#  grafana:
+#    image: grafana/grafana:latest
+#    container_name: grafana
+#    ports:
+#      - "3000:3000"
+#    volumes:
+#      - ./grafana-data:/var/lib/grafana
+#    environment:
+#      - GF_SECURITY_ADMIN_USER=admin
+#      - GF_SECURITY_ADMIN_PASSWORD=admin
+#      - GF_USERS_ALLOW_SIGN_UP=false
+#    depends_on:
+#      - prometheus
+#    networks:
+#      buddy-network:
+
+networks:
+  buddy-network:
+    driver: bridge
