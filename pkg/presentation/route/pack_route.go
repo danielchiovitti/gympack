@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/copier"
 	"go.opentelemetry.io/otel"
 	"gympack/pkg/domain/model"
+	"gympack/pkg/domain/usecase/pack/calc"
 	"gympack/pkg/domain/usecase/pack/create"
 	delete2 "gympack/pkg/domain/usecase/pack/delete"
 	"gympack/pkg/domain/usecase/pack/get"
@@ -28,6 +29,7 @@ func NewPackRoute(
 	getPackUseCase get.GetPackUseCaseInterface,
 	deletePackUseCase delete2.DeletePackUseCaseInterface,
 	updatePackUseCase update.UpdatePackUseCaseInterface,
+	calcPackUseCase calc.CalcPackUseCaseInterface,
 ) *PackRoute {
 	if packRouteInstance == nil {
 		packRouteLock.Lock()
@@ -39,6 +41,7 @@ func NewPackRoute(
 				getPackUseCase:          getPackUseCase,
 				deletePackUseCase:       deletePackUseCase,
 				updatePackUseCase:       updatePackUseCase,
+				calcPackUseCase:         calcPackUseCase,
 			}
 		}
 	}
@@ -51,6 +54,7 @@ type PackRoute struct {
 	getPackUseCase          get.GetPackUseCaseInterface
 	deletePackUseCase       delete2.DeletePackUseCaseInterface
 	updatePackUseCase       update.UpdatePackUseCaseInterface
+	calcPackUseCase         calc.CalcPackUseCaseInterface
 }
 
 func (p PackRoute) PackRoutes() *chi.Mux {
@@ -60,6 +64,7 @@ func (p PackRoute) PackRoutes() *chi.Mux {
 	r.Get("/{id}", p.getPack)
 	r.Delete("/{id}", p.deletePack)
 	r.Patch("/{id}", p.patchPack)
+	r.With(p.dtoValidationMiddleware.Validate(pack.PostCalcPackDto{})).Post("/calc", p.postCalcPack)
 	return r
 }
 
@@ -187,6 +192,40 @@ func (p PackRoute) patchPack(w http.ResponseWriter, r *http.Request) {
 	helpers.PatchStruct(&uModel, &dto)
 
 	resp, err := p.updatePackUseCase.Execute(ctx, id, uModel)
+	if err != nil {
+		helpers.JsonResponse(w, http.StatusBadRequest, errors.ErrorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+
+	helpers.JsonResponse(w, http.StatusOK, resp)
+}
+
+func (p PackRoute) postCalcPack(w http.ResponseWriter, r *http.Request) {
+	tracer := otel.Tracer("pack-route")
+	ctx, span := tracer.Start(r.Context(), "pack-route.calc")
+	defer span.End()
+
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		helpers.JsonResponse(w, http.StatusBadRequest, errors.ErrorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+	defer r.Body.Close()
+
+	var dto pack.PostCalcPackDto
+	err = json.Unmarshal(body, &dto)
+	if err != nil {
+		helpers.JsonResponse(w, http.StatusBadRequest, errors.ErrorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+
+	resp, err := p.calcPackUseCase.Execute(ctx, dto.Quantity)
 	if err != nil {
 		helpers.JsonResponse(w, http.StatusBadRequest, errors.ErrorResponse{
 			Error: err.Error(),

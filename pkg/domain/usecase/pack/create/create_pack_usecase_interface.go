@@ -6,5 +6,5 @@ import (
 )
 
 type CreatePackUseCaseInterface interface {
-	Execute(ctx context.Context, model model.PackModel) (*model.PackModel, error)
+	Execute(ctx context.Context, pModel model.PackModel) (*model.PackModel, error)
 }

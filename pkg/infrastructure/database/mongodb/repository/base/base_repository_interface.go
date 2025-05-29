@@ -6,7 +6,7 @@ import (
 )
 
 type BaseRepositoryInterface[T, U any] interface {
-	InsertOne(ctx context.Context, model T) (*T, error)
+	InsertOne(ctx context.Context, pModel T) (*T, error)
 	DeleteOneById(ctx context.Context, id string) (*int64, error)
 	DeleteOneByFilter(ctx context.Context, pFilter filter.BaseFilter) (*int64, error)
 	FindOneById(ctx context.Context, id string, project []string) (*T, error)

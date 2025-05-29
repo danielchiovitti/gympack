@@ -1,5 +1,19 @@
 
 
-go test -v ./test/integration
+go test -v ./test/integration/...
+
+go test -test.short -v ./pkg/...
+
+go test -v ./pkg/...
 
 mockgen -source=C:\go-projects\gympack\pkg\shared\logger_interface.go -destination=C:\go-projects\gympack\test\mocks\logger_interface_mock.go -package=mocks
+
+mockgen -source=C:\go-projects\gympack\pkg\domain\usecase\pack\create\create_pack_usecase_interface.go -destination=C:\go-projects\gympack\test\mocks\create_pack_usecase_interface_mock.go -package=mocks
+
+mockgen -source=C:\go-projects\gympack\pkg\infrastructure\database\mongodb\repository\pack\pack_repository_interface.go -destination=C:\go-projects\gympack\test\mocks\pack_repository_interface_mock.go -package=mocks
+
+
+
+
+
+

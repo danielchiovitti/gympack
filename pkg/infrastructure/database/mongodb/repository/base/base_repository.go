@@ -41,12 +41,12 @@ func NewBaseRepository[T, U any](
 	}
 }
 
-func (b *BaseRepository[T, U]) InsertOne(ctx context.Context, model T) (*T, error) {
+func (b *BaseRepository[T, U]) InsertOne(ctx context.Context, pModel T) (*T, error) {
 	uType := reflect.TypeOf((*U)(nil)).Elem()
 	_, span := otel.Tracer("BaseRepository").Start(ctx, fmt.Sprintf("BaseRepository.InsertOne.%s", uType.Name()))
 	defer span.End()
 
-	entity, err := b.Mapper.ToEntity(model)
+	entity, err := b.Mapper.ToEntity(pModel)
 	if err != nil {
 		return nil, err
 	}

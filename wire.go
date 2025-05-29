@@ -5,6 +5,7 @@ package gympack
 
 import (
 	"github.com/google/wire"
+	"gympack/pkg/domain/usecase/pack/calc"
 	"gympack/pkg/domain/usecase/pack/create"
 	delete2 "gympack/pkg/domain/usecase/pack/delete"
 	"gympack/pkg/domain/usecase/pack/get"
@@ -29,6 +30,7 @@ var superSet = wire.NewSet(
 	get.NewGetPackUseCase,
 	delete2.NewDeletePackUseCase,
 	update.NewUpdatePackUseCase,
+	calc.NewCalcPackUseCase,
 )
 
 func InitializeLoader() *presentation.Loader {

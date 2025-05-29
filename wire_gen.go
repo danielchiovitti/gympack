@@ -8,6 +8,7 @@ package gympack
 
 import (
 	"github.com/google/wire"
+	"gympack/pkg/domain/usecase/pack/calc"
 	"gympack/pkg/domain/usecase/pack/create"
 	delete2 "gympack/pkg/domain/usecase/pack/delete"
 	"gympack/pkg/domain/usecase/pack/get"
@@ -32,11 +33,12 @@ func InitializeLoader() *presentation.Loader {
 	getPackUseCaseInterface := get.NewGetPackUseCase(loggerInterface, packRepositoryInterface)
 	deletePackUseCaseInterface := delete2.NewDeletePackUseCase(loggerInterface, packRepositoryInterface)
 	updatePackUseCaseInterface := update.NewUpdatePackUseCase(loggerInterface, packRepositoryInterface)
-	packRoute := route.NewPackRoute(dtoValidationMiddleware, createPackUseCaseInterface, getPackUseCaseInterface, deletePackUseCaseInterface, updatePackUseCaseInterface)
+	calcPackUseCaseInterface := calc.NewCalcPackUseCase(loggerInterface, packRepositoryInterface)
+	packRoute := route.NewPackRoute(dtoValidationMiddleware, createPackUseCaseInterface, getPackUseCaseInterface, deletePackUseCaseInterface, updatePackUseCaseInterface, calcPackUseCaseInterface)
 	loader := presentation.NewLoader(configInterface, packRoute, loggerInterface)
 	return loader
 }
 
 // wire.go:
 
-var superSet = wire.NewSet(presentation.NewLoader, shared.NewConfig, middlewares.NewDtoValidationMiddleware, create.NewCreatePackUseCase, route.NewPackRoute, shared.NewLogger, provider.NewMongoDbProvider, pack.NewPackRepository, get.NewGetPackUseCase, delete2.NewDeletePackUseCase, update.NewUpdatePackUseCase)
+var superSet = wire.NewSet(presentation.NewLoader, shared.NewConfig, middlewares.NewDtoValidationMiddleware, create.NewCreatePackUseCase, route.NewPackRoute, shared.NewLogger, provider.NewMongoDbProvider, pack.NewPackRepository, get.NewGetPackUseCase, delete2.NewDeletePackUseCase, update.NewUpdatePackUseCase, calc.NewCalcPackUseCase)

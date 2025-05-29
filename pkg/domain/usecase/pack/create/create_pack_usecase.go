@@ -27,25 +27,25 @@ type CreatePackUseCase struct {
 	packRepository pack.PackRepositoryInterface
 }
 
-func (c *CreatePackUseCase) Execute(ctx context.Context, model model.PackModel) (*model.PackModel, error) {
+func (c *CreatePackUseCase) Execute(ctx context.Context, pModel model.PackModel) (*model.PackModel, error) {
 	ctx, span := otel.Tracer("CreatePackUseCase").Start(ctx, "CreatePackUseCase.Execute")
 	defer span.End()
 
-	if model.Id == "" {
-		model.Id = primitive.NewObjectID().Hex()
+	if pModel.Id == "" {
+		pModel.Id = primitive.NewObjectID().Hex()
 	}
 
-	if model.MaxSize <= model.MinSize {
+	if pModel.MaxSize <= pModel.MinSize {
 		return nil, fmt.Errorf("max size must be greater than min size")
 	}
 
 	pFilter := filter.BaseFilter{
 		OrFilters: []filter.BaseFilter{
 			{Range: map[string]filter.RangeFilter{
-				"minSize": {Min: helpers.ToInterfacePtr(model.MinSize), Max: helpers.ToInterfacePtr(model.MaxSize)}},
+				"minSize": {Min: helpers.ToInterfacePtr(pModel.MinSize), Max: helpers.ToInterfacePtr(pModel.MaxSize)}},
 			},
 			{Range: map[string]filter.RangeFilter{
-				"maxSize": {Min: helpers.ToInterfacePtr(model.MinSize), Max: helpers.ToInterfacePtr(model.MaxSize)}},
+				"maxSize": {Min: helpers.ToInterfacePtr(pModel.MinSize), Max: helpers.ToInterfacePtr(pModel.MaxSize)}},
 			},
 		},
 	}
@@ -59,8 +59,8 @@ func (c *CreatePackUseCase) Execute(ctx context.Context, model model.PackModel) 
 		return nil, fmt.Errorf("Min or Max already registered")
 	}
 
-	c.log.Info(fmt.Sprintf("CreatePackUseCase execute model: %v", model))
-	resPack, err := c.packRepository.InsertOne(ctx, model)
+	c.log.Info(fmt.Sprintf("CreatePackUseCase execute pModel: %v", pModel))
+	resPack, err := c.packRepository.InsertOne(ctx, pModel)
 	if err != nil {
 		c.log.Error(fmt.Sprintf("CreatePackUseCase execute packRepository.InsertOne error: %v", err))
 		span.RecordError(err)
