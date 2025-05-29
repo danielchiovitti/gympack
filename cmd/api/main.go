@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	time.Sleep(time.Second * 10)
+	time.Sleep(time.Second * 5)
 	l := gympack.InitializeLoader()
 	c := l.GetConfig()
 	r := l.GetRoutes()

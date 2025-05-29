@@ -35,8 +35,12 @@ func (c *CreatePackUseCase) Execute(ctx context.Context, model model.PackModel) 
 		model.Id = primitive.NewObjectID().Hex()
 	}
 
+	if model.MaxSize <= model.MinSize {
+		return nil, fmt.Errorf("max size must be greater than min size")
+	}
+
 	pFilter := filter.BaseFilter{
-		AndFilters: []filter.BaseFilter{
+		OrFilters: []filter.BaseFilter{
 			{Range: map[string]filter.RangeFilter{
 				"minSize": {Min: helpers.ToInterfacePtr(model.MinSize), Max: helpers.ToInterfacePtr(model.MaxSize)}},
 			},
@@ -46,7 +50,7 @@ func (c *CreatePackUseCase) Execute(ctx context.Context, model model.PackModel) 
 		},
 	}
 
-	fRes, err := c.packRepository.FindByFilter(ctx, pFilter, nil)
+	fRes, err := c.packRepository.FindByFilter(ctx, pFilter, []string{"Id"})
 	if err != nil {
 		return nil, fmt.Errorf("FindByFilter: %w", err)
 	}

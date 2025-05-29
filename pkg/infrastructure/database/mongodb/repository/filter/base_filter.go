@@ -96,5 +96,20 @@ func BuildBSONFilter(filter BaseFilter) bson.M {
 		bsonFilter["$or"] = orConditions
 	}
 
+	if len(filter.Sort) > 0 {
+
+	}
+
 	return bsonFilter
+}
+
+func BuildSort(sort map[string]int) bson.D {
+	var sortQuery bson.D
+	for k, v := range sort {
+		if v != 1 && v != -1 {
+			continue
+		}
+		sortQuery = append(sortQuery, bson.E{Key: k, Value: v})
+	}
+	return sortQuery
 }

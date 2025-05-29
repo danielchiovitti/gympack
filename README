@@ -1,0 +1,5 @@
+
+
+go test -v ./test/integration
+
+mockgen -source=C:\go-projects\gympack\pkg\shared\logger_interface.go -destination=C:\go-projects\gympack\test\mocks\logger_interface_mock.go -package=mocks

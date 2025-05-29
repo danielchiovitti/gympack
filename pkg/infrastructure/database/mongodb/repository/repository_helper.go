@@ -17,8 +17,8 @@ type RepositoryHelper[T, U any] struct {
 }
 
 func (r *RepositoryHelper[T, U]) ProjectionIsValid(fields []string) bool {
+	exists := false
 	for _, field := range fields {
-		exists := false
 
 		for i := 0; i < r.uType.NumField(); i++ {
 			currField := r.uType.Field(i)
@@ -33,13 +33,9 @@ func (r *RepositoryHelper[T, U]) ProjectionIsValid(fields []string) bool {
 			}
 
 		}
-
-		if !exists {
-			return false
-		}
 	}
 
-	return true
+	return exists
 }
 
 func (r *RepositoryHelper[T, U]) GetProjection(fields []string) bson.M {

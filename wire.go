@@ -6,6 +6,9 @@ package gympack
 import (
 	"github.com/google/wire"
 	"gympack/pkg/domain/usecase/pack/create"
+	delete2 "gympack/pkg/domain/usecase/pack/delete"
+	"gympack/pkg/domain/usecase/pack/get"
+	"gympack/pkg/domain/usecase/pack/update"
 	provider "gympack/pkg/infrastructure/database/mongodb"
 	"gympack/pkg/infrastructure/database/mongodb/repository/pack"
 	"gympack/pkg/presentation"
@@ -23,6 +26,9 @@ var superSet = wire.NewSet(
 	shared.NewLogger,
 	provider.NewMongoDbProvider,
 	pack.NewPackRepository,
+	get.NewGetPackUseCase,
+	delete2.NewDeletePackUseCase,
+	update.NewUpdatePackUseCase,
 )
 
 func InitializeLoader() *presentation.Loader {
