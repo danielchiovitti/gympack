@@ -26,7 +26,6 @@ func TestCreatePackUseCase(t *testing.T) {
 		Id:          primitive.NewObjectID().Hex(),
 		Name:        faker.Word(),
 		Description: faker.Word(),
-		MinSize:     1,
 		MaxSize:     10,
 		BaseModel: model.BaseModel{
 			CreatedAt:   time.Now().UTC().Truncate(time.Millisecond),

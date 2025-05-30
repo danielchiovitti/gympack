@@ -32,12 +32,11 @@ func (g *GetPackUseCase) Execute(ctx context.Context, id string) (*[]model.PackM
 
 	var pFilter filter.BaseFilter
 
-	pFilter.Sort = map[string]constant.RepositoryOrder{"minSize": constant.RepositoryOrderASC}
+	pFilter.Sort = map[string]constant.RepositoryOrder{"maxSize": constant.RepositoryOrderASC}
 
 	if id != "" {
 		pFilter = filter.BaseFilter{
 			Equals: map[string]interface{}{"_id": id},
-			Sort:   map[string]constant.RepositoryOrder{"minSize": -1},
 		}
 	}
 

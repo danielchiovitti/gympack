@@ -19,7 +19,6 @@ func TestPackRepositoryInsertOne(t *testing.T) {
 			Id:          primitive.NewObjectID().Hex(),
 			Name:        faker.Word(),
 			Description: faker.Word(),
-			MinSize:     1,
 			MaxSize:     5,
 			BaseModel: model.BaseModel{
 				CreatedAt:   time.Now().UTC().Truncate(time.Millisecond),
@@ -32,7 +31,6 @@ func TestPackRepositoryInsertOne(t *testing.T) {
 			Id:          primitive.NewObjectID().Hex(),
 			Name:        faker.Word(),
 			Description: faker.Word(),
-			MinSize:     6,
 			MaxSize:     10,
 			BaseModel: model.BaseModel{
 				CreatedAt:   time.Now().UTC().Truncate(time.Millisecond),
@@ -45,7 +43,6 @@ func TestPackRepositoryInsertOne(t *testing.T) {
 			Id:          primitive.NewObjectID().Hex(),
 			Name:        faker.Word(),
 			Description: faker.Word(),
-			MinSize:     11,
 			MaxSize:     20,
 			BaseModel: model.BaseModel{
 				CreatedAt:   time.Now().UTC().Truncate(time.Millisecond),
@@ -83,10 +80,6 @@ func TestPackRepositoryInsertOne(t *testing.T) {
 
 		if res.Description != v.Description {
 			t.Errorf("Failed to insert pack Description. Expected %v, got %v", v.Description, res.Description)
-		}
-
-		if res.MinSize != v.MinSize {
-			t.Errorf("Failed to insert pack MinSize. Expected %v, got %v", v.MinSize, res.MinSize)
 		}
 
 		if res.MaxSize != v.MaxSize {

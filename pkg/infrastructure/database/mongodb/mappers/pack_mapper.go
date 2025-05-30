@@ -43,7 +43,6 @@ func (p PackMapper) ToEntity(model model.PackModel) (*entity.PackEntity, error) 
 		Id:          id,
 		Name:        model.Name,
 		Description: model.Description,
-		MinSize:     model.MinSize,
 		MaxSize:     model.MaxSize,
 		BaseEntity: entity.BaseEntity{
 			CreatedAt:   model.CreatedAt,
@@ -62,7 +61,6 @@ func (p PackMapper) ToModel(entity entity.PackEntity) (*model.PackModel, error) 
 		Id:          entity.Id.Hex(),
 		Name:        entity.Name,
 		Description: entity.Description,
-		MinSize:     entity.MinSize,
 		MaxSize:     entity.MaxSize,
 		BaseModel: model.BaseModel{
 			CreatedAt:   entity.CreatedAt,

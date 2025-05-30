@@ -9,7 +9,6 @@ import (
 	"gympack/pkg/infrastructure/database/mongodb/repository/filter"
 	"gympack/pkg/infrastructure/database/mongodb/repository/pack"
 	"gympack/pkg/shared"
-	"gympack/pkg/shared/helpers"
 )
 
 func NewCreatePackUseCase(
@@ -35,19 +34,8 @@ func (c *CreatePackUseCase) Execute(ctx context.Context, pModel model.PackModel)
 		pModel.Id = primitive.NewObjectID().Hex()
 	}
 
-	if pModel.MaxSize <= pModel.MinSize {
-		return nil, fmt.Errorf("max size must be greater than min size")
-	}
-
 	pFilter := filter.BaseFilter{
-		OrFilters: []filter.BaseFilter{
-			{Range: map[string]filter.RangeFilter{
-				"minSize": {Min: helpers.ToInterfacePtr(pModel.MinSize), Max: helpers.ToInterfacePtr(pModel.MaxSize)}},
-			},
-			{Range: map[string]filter.RangeFilter{
-				"maxSize": {Min: helpers.ToInterfacePtr(pModel.MinSize), Max: helpers.ToInterfacePtr(pModel.MaxSize)}},
-			},
-		},
+		Equals: map[string]interface{}{"maxSize": pModel.MaxSize},
 	}
 
 	fRes, err := c.packRepository.FindByFilter(ctx, pFilter, []string{"Id"})
@@ -56,7 +44,7 @@ func (c *CreatePackUseCase) Execute(ctx context.Context, pModel model.PackModel)
 	}
 
 	if *fRes != nil && len(*fRes) > 0 {
-		return nil, fmt.Errorf("Min or Max already registered")
+		return nil, fmt.Errorf("max already registered")
 	}
 
 	c.log.Info(fmt.Sprintf("CreatePackUseCase execute pModel: %v", pModel))

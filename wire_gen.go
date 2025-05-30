@@ -35,11 +35,10 @@ func InitializeLoader() *presentation.Loader {
 	updatePackUseCaseInterface := update.NewUpdatePackUseCase(loggerInterface, packRepositoryInterface)
 	calcPackUseCaseInterface := calc.NewCalcPackUseCase(loggerInterface, packRepositoryInterface)
 	packRoute := route.NewPackRoute(dtoValidationMiddleware, createPackUseCaseInterface, getPackUseCaseInterface, deletePackUseCaseInterface, updatePackUseCaseInterface, calcPackUseCaseInterface)
-	frontRoute := route.NewFrontRoute(getPackUseCaseInterface)
-	loader := presentation.NewLoader(configInterface, packRoute, frontRoute, loggerInterface)
+	loader := presentation.NewLoader(configInterface, packRoute, loggerInterface)
 	return loader
 }
 
 // wire.go:
 
-var superSet = wire.NewSet(presentation.NewLoader, shared.NewConfig, middlewares.NewDtoValidationMiddleware, create.NewCreatePackUseCase, route.NewPackRoute, route.NewFrontRoute, shared.NewLogger, provider.NewMongoDbProvider, pack.NewPackRepository, get.NewGetPackUseCase, delete2.NewDeletePackUseCase, update.NewUpdatePackUseCase, calc.NewCalcPackUseCase)
+var superSet = wire.NewSet(presentation.NewLoader, shared.NewConfig, middlewares.NewDtoValidationMiddleware, create.NewCreatePackUseCase, route.NewPackRoute, shared.NewLogger, provider.NewMongoDbProvider, pack.NewPackRepository, get.NewGetPackUseCase, delete2.NewDeletePackUseCase, update.NewUpdatePackUseCase, calc.NewCalcPackUseCase)
