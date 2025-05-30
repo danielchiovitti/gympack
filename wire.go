@@ -24,6 +24,7 @@ var superSet = wire.NewSet(
 	middlewares.NewDtoValidationMiddleware,
 	create.NewCreatePackUseCase,
 	route.NewPackRoute,
+	route.NewFrontRoute,
 	shared.NewLogger,
 	provider.NewMongoDbProvider,
 	pack.NewPackRepository,

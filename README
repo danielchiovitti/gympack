@@ -1,15 +1,32 @@
 
 
+The intention of this project is not just to solve the proposed problem in a very summarized way.
+I wanted to demonstrate how I would structure a service in a more complete manner. You may notice that some parts, such as observability, I did not have time to implement.
+
+I also didn’t have time to create a UI or deploy the solution on AWS or another provider, but it is possible to run the solution by executing the command: docker compose up.
+
+I used portions of code that I had previously developed for my own personal projects, such as the MongoDB repository.
+
+I created an integration test that can be run with this command:
 go test -v ./test/integration/...
 
-go test -test.short -v ./pkg/...
+I used "testcontainers" to create a MongoDB instance for the integration tests.
 
+I also created a unit test that can be run with this command:
+go test -v ./pkg/...
+
+Both tests are not complete but demonstrate a full implementation of testing.
+
+I used Google Wire for Dependency Injection; it provides a quick and simple way to work.
+
+Inside the "postman-lib" directory you will find two libraries with requests to create, edit, remove, update, and execute the packaging calculation.
+If you want to create the packages following the same example model, run the requests in the "Initial Packs" library first, then run the "Calc" request inside the "pack" library.
+
+go test -v ./test/integration/...
 go test -v ./pkg/...
 
 mockgen -source=C:\go-projects\gympack\pkg\shared\logger_interface.go -destination=C:\go-projects\gympack\test\mocks\logger_interface_mock.go -package=mocks
-
 mockgen -source=C:\go-projects\gympack\pkg\domain\usecase\pack\create\create_pack_usecase_interface.go -destination=C:\go-projects\gympack\test\mocks\create_pack_usecase_interface_mock.go -package=mocks
-
 mockgen -source=C:\go-projects\gympack\pkg\infrastructure\database\mongodb\repository\pack\pack_repository_interface.go -destination=C:\go-projects\gympack\test\mocks\pack_repository_interface_mock.go -package=mocks
 
 

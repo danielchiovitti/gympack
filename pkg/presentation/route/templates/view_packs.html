@@ -1,0 +1,9 @@
+<ul>
+    {{range .}}
+    <li>
+        <strong>{{.Name}}</strong> — {{.Description}}
+    </li>
+    {{else}}
+    <li>No item</li>
+    {{end}}
+</ul>

@@ -75,7 +75,7 @@ services:
   mongodb:
     image: mongo:8.0.4
     container_name: mongodb
-    restart: always
+    restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
@@ -84,7 +84,30 @@ services:
     volumes:
       - ./mongo_data:/data/db
     networks:
-      buddy-network:
+      - pack
+
+  app:
+    build: .
+    container_name: pack-service
+    ports:
+      - "3025:3025"
+    environment:
+      LOG_STASH_URL: localhost:5000
+      MONGODB_AUTH_SOURCE: admin
+      MONGODB_DATABASE_NAME: core
+      MONGODB_HOST: mongodb
+      MONGODB_MAX_IDLE_TIMEOUT: 5000
+      MONGODB_MAX_POOL_SIZE: 250
+      MONGODB_MIN_POOL_SIZE: 5
+      MONGODB_PASSWORD: password
+      MONGODB_PORT: 27017
+      MONGODB_USER: admin
+      MONGODB_WAIT_QUEUE_TIMEOUT: 5000
+      PORT: 3025
+      TIMEOUT: 3000
+    restart: unless-stopped
+    networks:
+      - pack
 
 #  grafana:
 #    image: grafana/grafana:latest
@@ -103,5 +126,5 @@ services:
 #      buddy-network:
 
 networks:
-  buddy-network:
-    driver: bridge
+  pack:
+    external: false
